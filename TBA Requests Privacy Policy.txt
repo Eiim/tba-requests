@@ -1,0 +1,4 @@
+TBA Requests does not actively collect any user data.
+TBA API v3 Auth Keys (also known as X-TBA-Auth-Keys) are stored with their documents and never collected or sent except to thebluealliance.com for the purposes of completing spreadsheet queries.
+Any other information processed by TBA Requests will not be collected or sent except to thebluealliance.com for the purposes of completing spreadsheet queries.
+Please note that while Google and its related services (i.e. Chrome Web Store, etc.) may collect usage data on TBA Requests, this process is independent of TBA Requests.
