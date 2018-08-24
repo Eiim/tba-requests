@@ -1,17 +1,3 @@
-// Begin Add-On stuff
-function onOpen() {
-  var ui = SpreadsheetApp.getUi();
-  // Or DocumentApp or FormApp.
-  ui.createMenu('Custom Menu')
-      .addItem('Help', 'menuHelp')
-      .addToUi();
-}
-
-function menuHelp() {
-  window.open('https://docs.google.com/document/d/1gXv14J6kD4GPJuOErnbf-AW2xkxs6asXT-PaI-Gm1nM','_blank')
-}
-// End Add-On stuff
-
 // Begin Base Scripts
 /**
  * Checks if a value is hexadecimal.
@@ -73,7 +59,7 @@ function TBAKey() {
   throw new Error('This isn\'t right.')
 }
 /**
- * Decodes a string containing \uxxxx, \\, and \î escapes
+ * Decodes a string containing \uxxxx, \\, and \‚Äù escapes
  * 
  * @param {text} input The input text.
  * @return The decoded string.
@@ -161,6 +147,18 @@ function TBAEventOPRs(event) {
 
 //Begin Specific Scripts
 /**
+ * Returns a list of events for a year.
+ * 
+ * @param {number} year A year
+ * @return A list of all event keys for that year.
+ * @customfunction
+ */
+function TBAYearEvents(year) {
+  try {
+    return JSON.parse(TBAQuery("events/"+year+"/keys"))
+  } catch (err) {return ("There was an error retrieving the data.")}
+}
+/**
  * Returns the team name/nickname for the team number.
  * 
  * @param {number} team A team number.
@@ -168,7 +166,9 @@ function TBAEventOPRs(event) {
  * @customfunction
  */
 function TBATeamName(team) {
+  try {
   return uniDecode(TBATeamSimple(team)['nickname'])
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the team full name/name for the team number.
@@ -178,7 +178,9 @@ function TBATeamName(team) {
  * @customfunction
  */
 function TBATeamNameFull(team) {
+  try {
   return uniDecode(TBATeamSimple(team)['name'])
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the city the team number is located in.
@@ -188,7 +190,9 @@ function TBATeamNameFull(team) {
  * @customfunction
  */
 function TBATeamCity(team) {
+  try {
   return uniDecode(TBATeamSimple(team)['city'])
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * The state or province the team is located in.
@@ -198,7 +202,9 @@ function TBATeamCity(team) {
  * @customfunction
  */
 function TBATeamState(team) {
+  try {
   return uniDecode(TBATeamSimple(team)['state_prov'])
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the country the team number is located in.
@@ -208,7 +214,9 @@ function TBATeamState(team) {
  * @customfunction
  */
 function TBATeamCountry(team) {
+  try {
   return uniDecode(TBATeamSimple(team)['country'])
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the website of the team number.
@@ -218,8 +226,10 @@ function TBATeamCountry(team) {
  * @customfunction
  */
 function TBATeamSite(team) {
+  try {
   var s = TBATeam(team)['website']
   if (s) {return uniDecode(s)} else {return "No website found."}
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the rookie year of the team
@@ -229,27 +239,33 @@ function TBATeamSite(team) {
  * @customfunction
  */
 function TBATeamRookie(team) {
+  try {
   return JSON.parse(JSON.stringify(TBATeam(team)))['rookie_year']
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
- * Returns the team numberís championship location.
+ * Returns the team number‚Äôs championship location.
  * 
  * @param {number} team A team number
  * @return The championship location
  * @customfunction
  */
 function TBATeamChampionship(team) {
+  try {
   return uniDecode(TBATeam(team)['home_championship']['2018'])
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
- * Returns the team numberís pre-2018 championship.
+ * Returns the team number‚Äôs pre-2018 championship.
  * 
  * @param {number} team A team number
  * @return The old championship location.
  * @customfunction
  */
 function TBATeamChampionshipOld(team) {
+  try {
   return uniDecode(TBATeam(team)['home_championship']['2017'])
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the latest FRC season
@@ -258,10 +274,12 @@ function TBATeamChampionshipOld(team) {
  * @customfunction
  */
 function TBAMaxSeason() {
+  try {
   return JSON.parse(JSON.stringify(TBAStatus()))['max_season']
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
- * Returns a teamís ranking in qualifications at a given event.
+ * Returns a team‚Äôs ranking in qualifications at a given event.
  * 
  * @param {number} team A team number
  * @param {text} event An event key
@@ -285,8 +303,10 @@ function TBATeamEventQualRank(team, event) {
  * @customfunction
  */
 function TBATeamYearEvents(team, year) {
+  try {
   var x = JSON.parse(TBAQuery('team/frc'+team+'/events/'+year+'/keys'))
   return x
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the color of the winning alliance for the match.
@@ -296,7 +316,9 @@ function TBATeamYearEvents(team, year) {
  * @customfunction
  */
 function TBAMatchWinner(match) {
+  try {
   return TBAMatch(match)['winning_alliance']
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Lists each winner in a given match.
@@ -306,6 +328,7 @@ function TBAMatchWinner(match) {
  * @customfunction
  */
 function TBAMatchWinners(match) {
+  try {
   var m = TBAMatch(match)
   var a = m['winning_alliance']
   var x = m['alliances'][a]['team_keys']
@@ -313,6 +336,7 @@ function TBAMatchWinners(match) {
     x[i] = x[i].substring(3)
   }
   return x
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns if a team won the match or not.
@@ -323,11 +347,13 @@ function TBAMatchWinners(match) {
  * @customfunction
  */
 function TBATeamMatchWin(team, match) {
+  try {
   var x = TBAMatchWinners(match)
   for (i in x) {
     if (x[i].toString() === team.toString()) {return true}
   }
   return false
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns if a team won their xth match (sorted by keys in alphabetical order, not order of competition) at an event.
@@ -339,6 +365,7 @@ function TBATeamMatchWin(team, match) {
  * @customfunction
  */
 function TBATeamEventMatchnumWin(team,event,matchnum) {
+  try {
   var x = JSON.stringify(TBATeamEventMatchKeys(team, event)[matchnum-1])
   x = x.substring(1,x.length-1)
   var y = TBAMatchWinners(x)
@@ -347,6 +374,7 @@ function TBATeamEventMatchnumWin(team,event,matchnum) {
     if (y[i].toString() === team.toString()) {return true}
   }
   return false
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the color of a team in a certain match.
@@ -357,6 +385,7 @@ function TBATeamEventMatchnumWin(team,event,matchnum) {
  * @customfunction
  */
 function TBAMatchTeamColor(match, team) {
+  try {
   var m = TBAMatch(match)
   var r = m["alliances"]["red"]["team_keys"]
   var b = m["alliances"]["blue"]["team_keys"]
@@ -367,6 +396,7 @@ function TBAMatchTeamColor(match, team) {
     if (b[bi].toString() === ("frc"+team.toString())) {return "blue"}
   }
   throw new Error('Team was not at the match')
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the score of an alliance at a match given their color.
@@ -377,6 +407,7 @@ function TBAMatchTeamColor(match, team) {
  * @customfunction
  */
 function TBAMatchAllianceScore(match, color) {
+  try {
   var m = TBAMatch(match)
   switch (match.substr(0,4)) {
     case '2015':
@@ -394,6 +425,7 @@ function TBAMatchAllianceScore(match, color) {
     default:
       throw new Error('Score not supported for this year')
   }
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the ranking points an alliance earned at a match given their color.
@@ -404,6 +436,7 @@ function TBAMatchAllianceScore(match, color) {
  * @customfunction
  */
 function TBAMatchAllianceRP(match, color) {
+  try {
   var m = TBAMatch(match)
   switch (match.substr(0,4)) {
     case '2016':
@@ -418,6 +451,7 @@ function TBAMatchAllianceRP(match, color) {
     default:
       throw new Error('RP not supported for this year')
   }
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the time of a match in unix epoch time.
@@ -427,7 +461,9 @@ function TBAMatchAllianceRP(match, color) {
  * @customfunction
  */
 function TBAMatchTime(match) {
+  try {
   return JSON.stringify(TBAMatch(match)['post_result_time'])
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the Twitter handle of the team, if available.
@@ -437,6 +473,7 @@ function TBAMatchTime(match) {
  * @customfunction
  */
 function TBATeamTwitter(team) {
+  try {
   var json = TBATeamSocial(team)
   var i = 0;
   for (var ix in json) {
@@ -447,6 +484,7 @@ function TBATeamTwitter(team) {
     i++
   }
   return "No Twitter Profile Found."
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the Facebook username of the team, if available.
@@ -456,6 +494,7 @@ function TBATeamTwitter(team) {
  * @customfunction
  */
 function TBATeamFacebook(team) {
+  try {
   var json = TBATeamSocial(team)
   var i = 0;
   for (var ix in json) {
@@ -466,6 +505,7 @@ function TBATeamFacebook(team) {
     i++
   }
   return "No Facebook Profile Found."
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the Github username of the team, if available.
@@ -475,6 +515,7 @@ function TBATeamFacebook(team) {
  * @customfunction
  */
 function TBATeamGithub(team) {
+  try {
   var json = TBATeamSocial(team)
   var i = 0;
   for (var ix in json) {
@@ -485,6 +526,7 @@ function TBATeamGithub(team) {
     i++
   }
   return "No Github Profile Found."
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the Instagram username of the team, if available.
@@ -494,6 +536,7 @@ function TBATeamGithub(team) {
  * @customfunction
  */
 function TBATeamInstagram(team) {
+  try {
   var json = TBATeamSocial(team)
   var i = 0;
   for (var ix in json) {
@@ -504,6 +547,7 @@ function TBATeamInstagram(team) {
     i++
   }
   return "No Instagram Profile Found."
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the Youtube channel of the team, if available.
@@ -513,6 +557,7 @@ function TBATeamInstagram(team) {
  * @customfunction
  */
 function TBATeamYoutube(team) {
+  try {
   var json = TBATeamSocial(team)
   var i = 0;
   for (var ix in json) {
@@ -523,6 +568,7 @@ function TBATeamYoutube(team) {
     i++
   }
   return "No Youtube Channel Found."
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the Periscope username of the team, if available.
@@ -532,6 +578,7 @@ function TBATeamYoutube(team) {
  * @customfunction
  */
 function TBATeamPeriscope(team) {
+  try {
   var json = TBATeamSocial(team)
   var i = 0;
   for (var ix in json) {
@@ -542,6 +589,7 @@ function TBATeamPeriscope(team) {
     i++
   }
   return "No Youtube Channel Found."
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the OPR of a team at an event.
@@ -552,7 +600,9 @@ function TBATeamPeriscope(team) {
  * @customfunction
  */
 function TBATeamEventOPR(team, event) {
+  try {
   return TBAEventOPRs(event)["oprs"]["frc"+team]
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the DPR of a team at an event.
@@ -563,7 +613,9 @@ function TBATeamEventOPR(team, event) {
  * @customfunction
  */
 function TBATeamEventDPR(team, event) {
+  try {
   return TBAEventOPRs(event)["dprs"]["frc"+team]
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the CCWM of a team at an event.
@@ -574,7 +626,9 @@ function TBATeamEventDPR(team, event) {
  * @customfunction
  */
 function TBATeamEventCCWM(team, event) {
+  try {
   return TBAEventOPRs(event)["ccwms"]["frc"+team]
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Lists the teams at an event.
@@ -584,11 +638,13 @@ function TBATeamEventCCWM(team, event) {
  * @customfunction
  */
 function TBAEventTeams(event) {
+  try {
   var x = JSON.parse(TBAQuery("event/"+event+"/teams/keys"))
   for (var i = 0; i < x.length; i++) {
     x[i] = x[i].substring(3)
   }
   return x
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the number of wins a team had in qualification matches at the given event.
@@ -599,7 +655,9 @@ function TBAEventTeams(event) {
  * @customfunction
  */
 function TBATeamEventQualWins(team, event) {
+  try {
   return TBATeamEventStatus(team, event)['qual']['ranking']['record']['wins']
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the number of losses a team had in qualification matches at the given event.
@@ -610,7 +668,9 @@ function TBATeamEventQualWins(team, event) {
  * @customfunction
  */
 function TBATeamEventQualLosses(team, event) {
+  try {
   return TBATeamEventStatus(team, event)['qual']['ranking']['record']['losses']
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
  * Returns the number of ties a team had in qualification matches at the given event.
@@ -621,7 +681,9 @@ function TBATeamEventQualLosses(team, event) {
  * @customfunction
  */
 function TBATeamEventQualTies(team, event) {
+  try {
   return TBATeamEventStatus(team, event)['qual']['ranking']['record']['ties']
+  } catch (err) {return ("There was an error retrieving the data.")}
 }
 // End Specific Scripts
 
@@ -635,6 +697,7 @@ function TBATeamEventQualTies(team, event) {
  * @customfunction
  */
 function TBAMatchCustom(match, nav) {
+  try {
   var args = Array.prototype.slice.call(arguments, 1);
   var json = TBAMatch(match)
   var t = ""
@@ -642,22 +705,27 @@ function TBAMatchCustom(match, nav) {
     json = json[args[a]]
   }
   return JSON.stringify(json)
+  } catch (err) {return ("There was an error parsing the JSON.")}
 }
 /**
  * Much like TBAMatchCustom(), however, this can point to an arbitrary TBA API v3 destination.
  * 
  * @param {text} query The query path after "/api/v3/" in the JSON URL.
- * @param (text} nav The navigation path through the JSON. Can be of arbitrary length, each item is a sub-level.
+ * @param {text} nav The navigation path through the JSON. Can be of arbitrary length, each item is a sub-level.
  * @return Whatever the nav path leads to.
  * @customfunction
  */
 function TBACustom(query, nav) {
-  var json = TBAQuery(query)
+  var json
+  try {
+  json = TBAQuery(query)
+  } catch (err) {return ("There was an error retrieving the JSON.")}
+  try {
   var args = Array.prototype.slice.call(arguments, 1);
-  return JSON.stringify(json[0]['blue_score'])
   for (var a in args) {
     json = json[args[a]]
   }
   return JSON.stringify(json)
+  } catch (err) {return ("There was an error parsing the JSON.")}
 }
 // End Custom Scripts
