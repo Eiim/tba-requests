@@ -704,7 +704,7 @@ function TBAMatchCustom(match, nav) {
   for (var a in args) {
     json = json[args[a]]
   }
-  return JSON.stringify(json)
+  return json
   } catch (err) {return ("There was an error parsing the JSON.")}
 }
 /**
