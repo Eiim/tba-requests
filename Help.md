@@ -38,6 +38,7 @@ Below is a list of all functions, grouped by type. Most of the functions which w
 * TBAEventMatchKeys(event): Returns a list of match keys for a given event.
 * TBAEventOPRs(event): Returns CCWMs, DPRs, and OPRs for an event.
 ### Specific Functions
+* TBAYearEvents(year): Returns a list of event keys for a given year.
 * TBATeamName(team): Returns the team name/nickname for the team number.
 * TBATeamNameFull(team): Returns the team full name/name for the team number.
 * TBATeamCity(team): Returns the city the team number is located in.
