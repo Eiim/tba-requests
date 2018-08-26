@@ -399,6 +399,19 @@ function TBAMatchTeamColor(match, team) {
   } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
+ * Returns the teams of an alliance at a match given their color.
+ * 
+ * @param {text} match A match key
+ * @param {text} color A color (red/blue)
+ * @return A list of the three teams of the chosen alliance at the match.
+ * @customfunction
+ */
+function TBAMatchAllianceTeams(match, color) {
+  try {
+    return TBAMatch(match)['alliances'][color]['team_keys']
+  } catch (err) {return ("There was an error retrieving the data.")}
+}
+/**
  * Returns the score of an alliance at a match given their color.
  * 
  * @param {text} match A match key
