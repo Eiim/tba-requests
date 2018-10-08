@@ -731,7 +731,7 @@ function TBAMatchCustom(match, nav) {
 function TBACustom(query, nav) {
   var json
   try {
-  json = TBAQuery(query)
+  json = JSON.parse(TBAQuery(query))
   } catch (err) {return ("There was an error retrieving the JSON.")}
   try {
   var args = Array.prototype.slice.call(arguments, 1);
