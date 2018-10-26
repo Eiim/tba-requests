@@ -299,14 +299,24 @@ function TBATeamEventQualRank(team, event) {
  * 
  * @param {number} team A team number
  * @param {number} year A year
+ * @param {boolean} opt_official Optionally fetch only official events
  * @return An 1-by-x array of event keys
  * @customfunction
  */
-function TBATeamYearEvents(team, year) {
+function TBATeamYearEvents(team, year, opt_official) {
   try {
-  var x = JSON.parse(TBAQuery('team/frc'+team+'/events/'+year+'/keys'))
-  return x
-  } catch (err) {return ("There was an error retrieving the data.")}
+    var eventKeys = JSON.parse(TBAQuery('team/frc'+team+'/events/'+year+'/keys'))
+    if (opt_official) {
+      var eventData = JSON.parse(TBAQuery('team/frc'+team+'/events/'+year))
+      eventData.forEach(function(event) {
+          if (event['event_type'] === 99){
+            eventKeys.splice(eventKeys.indexOf(event['key']), 1)
+          }
+      })
+    }
+  
+    return eventKeys
+  } catch (err) { return ("There was an error retrieving the data.") }
 }
 /**
  * Returns the color of the winning alliance for the match.
@@ -731,7 +741,7 @@ function TBAMatchCustom(match, nav) {
 function TBACustom(query, nav) {
   var json
   try {
-  json = TBAQuery(query)
+  json = JSON.parse(TBAQuery(query))
   } catch (err) {return ("There was an error retrieving the JSON.")}
   try {
   var args = Array.prototype.slice.call(arguments, 1);
