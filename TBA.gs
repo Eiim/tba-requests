@@ -611,7 +611,7 @@ function TBATeamPeriscope(team) {
     }
     i++
   }
-  return "No Youtube Channel Found."
+  return "No Periscope Channel Found."
   } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
