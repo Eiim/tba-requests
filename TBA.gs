@@ -445,6 +445,9 @@ function TBAMatchAllianceScore(match, color) {
     case '2018':
       return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
       break;
+    case '2019':
+      return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
+      break;
     default:
       throw new Error('Score not supported for this year')
   }
@@ -469,6 +472,9 @@ function TBAMatchAllianceRP(match, color) {
       return JSON.stringify(m['score_breakdown'][color]['tba_rpEarned'])
       break;
     case '2018':
+      return JSON.stringify(m['score_breakdown'][color]['rp'])
+      break;
+    case '2019':
       return JSON.stringify(m['score_breakdown'][color]['rp'])
       break;
     default:
