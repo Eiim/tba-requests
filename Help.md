@@ -54,7 +54,7 @@ Below is a list of all functions, grouped by type. Most of the functions which w
 * TBAMatchWinner(match): Returns the color of the winning alliance for the match.
 * TBAMatchWinners(match): Lists each winner in a given match.
 * TBATeamMatchWin(team, match): Returns if a team won the match or not.
-* TBATeamEventMatchnumWin(team, event, matchnum): Returns if a team won their xth match (sorted by keys in alphabetical order, not order of competition) at an event. For example, TBATeamEventMatchnumWin(4611, 2018ohmv, 3) returns true because 4611 won their second match at 2018ohmv when sorted by alphabetical order (which turns out to be 2018ohmv_qm12)
+* TBATeamEventMatchnumWin(team, event, matchnum): Returns if a team won their xth match (sorted by keys in alphabetical order, not order of competition) at an event. For example, TBATeamEventMatchnumWin(4611, 2018ohmv, 2) returns true because 4611 won their second match at 2018ohmv when sorted by alphabetical order (which turns out to be 2018ohmv_qm12)
 * TBAMatchTeamColor(match, team): Returns the color of a team in a certain match.
 * TBAMatchAllianceScore(match, alliance): Returns the score of an alliance at a match given their color. Only works in supported years (2015-2018). Make a GitHub issue, or better yet, a merge  request, if this needs updated.
 * TBAMatchAllianceRP(match, alliance): Returns the ranking points an alliance earned at a match given their color. Only works in supported years (2016-2018). Make a GitHub issue, or better yet, a merge request, if this needs updated.
