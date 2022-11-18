@@ -454,10 +454,10 @@ function TBAMatchAllianceScore(match, color) {
     case '2021':
       return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
       break;
-    case '2022
+    case '2022':
       return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
       break;
-    case '2023
+    case '2023':
       return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
       break;
     default:
