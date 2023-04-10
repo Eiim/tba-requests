@@ -460,6 +460,9 @@ function TBAMatchAllianceScore(match, color) {
     case '2023':
       return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
       break;
+    case '2024':
+     return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
+     break;
     default:
       throw new Error('Score not supported for this year')
   }
