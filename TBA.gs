@@ -27,6 +27,31 @@ function epochToGMTTime(epoch) {
   return new Date(epoch * 1000).toTimeString()
 }
 /**
+ * Decodes a string containing \uxxxx, \\, and \” escapes
+ * 
+ * @param {text} input The input text.
+ * @return The decoded string.
+ * @customfunction
+ */
+function uniDecode(input) {
+  var output = ""
+  for (var i = 0; i < input.length; i++) {
+    if (isHex(input.slice(i-3, i)) && input.charAt(i-4) === 'u' && input.charAt(i-5) === '\\') {
+      output = output.slice(0, output.length-5)
+      output += String.fromCharCode(parseInt(input.charAt(i-3)+input.charAt(i-2)+input.charAt(i-1)+input.charAt(i),16))
+    } else {
+    if (input.charAt(i-1) === '\\' && (input.charAt(i) === '\\' | input.charAt(i) === "\"")) {
+      output = output.slice(0, output.length-1)
+      output += input.charAt(i)
+    } else {
+    output += input.charAt(i)
+      }
+    }
+  }
+  Logger.log(output)
+  return output
+}
+/**
  * Sets the TBA Read Authentication Key for the project. Needs to be obtained from https://www.thebluealliance.com/account. Tied to the spreadsheet. Required for all other TBA calls.
  *
  * @param {text} key The TBA key.
@@ -58,31 +83,7 @@ function TBAKey() {
   }
   throw new Error('This isn\'t right.')
 }
-/**
- * Decodes a string containing \uxxxx, \\, and \” escapes
- * 
- * @param {text} input The input text.
- * @return The decoded string.
- * @customfunction
- */
-function uniDecode(input) {
-  var output = ""
-  for (var i = 0; i < input.length; i++) {
-    if (isHex(input.slice(i-3, i)) && input.charAt(i-4) === 'u' && input.charAt(i-5) === '\\') {
-      output = output.slice(0, output.length-5)
-      output += String.fromCharCode(parseInt(input.charAt(i-3)+input.charAt(i-2)+input.charAt(i-1)+input.charAt(i),16))
-    } else {
-    if (input.charAt(i-1) === '\\' && (input.charAt(i) === '\\' | input.charAt(i) === "\"")) {
-      output = output.slice(0, output.length-1)
-      output += input.charAt(i)
-    } else {
-    output += input.charAt(i)
-      }
-    }
-  }
-  Logger.log(output)
-  return output
-}
+
 /**
  * Handles the HTTPS request for TBA requests. Takes the path, such as team/frc1234/simple, and returns the resulting JSON object. Uses the key set in TBASetKey().
  * 
@@ -244,30 +245,6 @@ function TBATeamRookie(team) {
   } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
- * Returns the team number’s championship location.
- * 
- * @param {number} team A team number
- * @return The championship location
- * @customfunction
- */
-function TBATeamChampionship(team) {
-  try {
-  return uniDecode(TBATeam(team)['home_championship']['2018'])
-  } catch (err) {return ("There was an error retrieving the data.")}
-}
-/**
- * Returns the team number’s pre-2018 championship.
- * 
- * @param {number} team A team number
- * @return The old championship location.
- * @customfunction
- */
-function TBATeamChampionshipOld(team) {
-  try {
-  return uniDecode(TBATeam(team)['home_championship']['2017'])
-  } catch (err) {return ("There was an error retrieving the data.")}
-}
-/**
  * Returns the latest FRC season
  * 
  * @return A year, the latest FRC season.
@@ -288,10 +265,14 @@ function TBAMaxSeason() {
  */
 function TBATeamEventQualRank(team, event) {
   try {
-    return TBATeamEventStatus(team, event)['qual']['ranking']['rank']
+    rank = TBATeamEventStatus(team, event)['qual']['ranking']['rank']
+    if(rank) {
+      return rank
+    }
+    throw new Error('This event does not have qual rankings.')
   }
   catch (err) {
-    throw new Error('Team was not at competition or there were no qual rankings.'+err)
+    throw new Error('Team was not at competition or there were no qual rankings.')
   }
 }
 /**
@@ -431,38 +412,17 @@ function TBAMatchAllianceTeams(match, color) {
  */
 function TBAMatchAllianceScore(match, color) {
   try {
-  var m = TBAMatch(match)
-  switch (match.substr(0,4)) {
-    case '2015':
+    var m = TBAMatch(match)
+    var year = parseInt(match.substr(0,4))
+    if(year >= 2000 && year < 2015) {
+      return JSON.stringify(m['alliances'][color]['score'])
+    } else if(year == 2015) {
       return JSON.stringify(m['score_breakdown'][color]['total_points'])
-      break;
-    case '2016':
+    } else if(year >= 2016 && year <= 2026) {
       return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
-      break;
-    case '2017':
-      return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
-      break;
-    case '2018':
-      return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
-      break;
-    case '2019':
-      return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
-      break;
-    case '2020':
-      return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
-      break;
-    case '2021':
-      return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
-      break;
-    case '2022':
-      return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
-      break;
-    case '2023':
-      return JSON.stringify(m['score_breakdown'][color]['totalPoints'])
-      break;
-    default:
+    } else {
       throw new Error('Score not supported for this year')
-  }
+    }
   } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
@@ -475,23 +435,15 @@ function TBAMatchAllianceScore(match, color) {
  */
 function TBAMatchAllianceRP(match, color) {
   try {
-  var m = TBAMatch(match)
-  switch (match.substr(0,4)) {
-    case '2016':
+    var m = TBAMatch(match)
+    var year = parseInt(match.substr(0,4))
+    if(year >= 2016 && year <= 2017) {
       return JSON.stringify(m['score_breakdown'][color]['tba_rpEarned'])
-      break;
-    case '2017':
-      return JSON.stringify(m['score_breakdown'][color]['tba_rpEarned'])
-      break;
-    case '2018':
+    } else if(year >= 2018 && year <= 2026) {
       return JSON.stringify(m['score_breakdown'][color]['rp'])
-      break;
-    case '2019':
-      return JSON.stringify(m['score_breakdown'][color]['rp'])
-      break;
-    default:
+    } else {
       throw new Error('RP not supported for this year')
-  }
+    }
   } catch (err) {return ("There was an error retrieving the data.")}
 }
 /**
